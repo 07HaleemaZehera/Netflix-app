@@ -10,9 +10,15 @@ Netflix GPT
   - redirect to browsde page
 - Browse(after authentication)
   -Header
+  - lOGIN FORM
+  - sign up form
   -Main Movie - Treailer in bacground - Titile and description
   -movieSuggestion - movie list
 
 - NetflixGPT
 - Search Bar
 - Movie Suggestion
+
+
+
+ABBR- react arrow component export----- rafce
