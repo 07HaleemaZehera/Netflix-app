@@ -1,10 +1,23 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Header from "./Header";
+import { checkValidData } from "../utils/Validate";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
+  const [isErrorMessage, setErrorMessage] = useState(null)
+
+  const email = useRef(null);
+  const password = useRef(null);
+  const name =  useRef(null)
+
   const toggleSignInForm = () => {
     setIsSignInForm(!isSignInForm);
+  };
+  const handleBtnClick = () => {
+    // validate the form data
+    const message = checkValidData(email.current.value, password.current.value);
+    setErrorMessage(message);
+    // console.log("email", email.current.value);
   };
   return (
     <div>
@@ -15,31 +28,36 @@ const Login = () => {
           alt="logo"
         />
       </div>
-      <form className="absolute p-12 bg-black w-4/12 my-36 mx-auto right-0 left-0 text-white bg-opacity-70">
+      <form onSubmit={(e)=> e.preventDefault()} className="absolute p-12 bg-black w-4/12 my-36 mx-auto right-0 left-0 text-white bg-opacity-70">
         <h1 className="font-bold text-3xl py-4">
           {" "}
           {isSignInForm ? "Sign In" : "Sign Up"}
         </h1>
         {!isSignInForm && (
           <input
+          ref={name}
             type="text"
             placeholder=" Full Name"
             className="p-4 my-6 w-full bg-gray-700"
           ></input>
         )}
         <input
+        ref={email}
           type="email"
           placeholder="Email Address"
           className="p-4 my-6 w-full bg-gray-700"
         ></input>
         <input
+        ref={password}
           type="password"
           placeholder="Password"
           className="p-4 my-6 w-full  bg-gray-700"
         ></input>
+
+      <p className="font-bold text-lg p-2 my-2 text-red-500">{isErrorMessage}</p>
         <button
           type="submit"
-          className="p-4 my-6 bg-red-700 w-full rounded-lg "
+          className="p-4 my-6 bg-red-700 w-full rounded-lg " onClick={handleBtnClick}
         >
           {isSignInForm ? "Sign In" : "Sign Up"}
         </button>

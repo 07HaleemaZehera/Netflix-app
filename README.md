@@ -6,8 +6,8 @@ Netflix GPT
 <!-- #Features -->
 
 - Login/signup page
-  - Sign iN/ sign up form
-  - redirect to browsde page
+  - Sign iN/ sign up form +  validation
+  - redirect to browse page
 - Browse(after authentication)
   -Header
   - lOGIN FORM
@@ -22,3 +22,4 @@ Netflix GPT
 
 
 ABBR- react arrow component export----- rafce
+formik -- for bigger forms
