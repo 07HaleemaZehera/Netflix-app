@@ -1,14 +1,19 @@
 import React, { useRef, useState } from "react";
 import Header from "./Header";
 import { checkValidData } from "../utils/Validate";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../utils/firebase";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
-  const [isErrorMessage, setErrorMessage] = useState(null)
+  const [isErrorMessage, setErrorMessage] = useState(null);
 
   const email = useRef(null);
   const password = useRef(null);
-  const name =  useRef(null)
+  const name = useRef(null);
 
   const toggleSignInForm = () => {
     setIsSignInForm(!isSignInForm);
@@ -18,6 +23,44 @@ const Login = () => {
     const message = checkValidData(email.current.value, password.current.value);
     setErrorMessage(message);
     // console.log("email", email.current.value);
+
+    if (message) return;
+    // create a new user/ signIn signUp
+    if (!isSignInForm) {
+      // signUp logic
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log(user, "user");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + "-" + errorMessage);
+        });
+    } else {
+      // SignIn logic
+      if (isSignInForm) {
+        signInWithEmailAndPassword(
+          auth,
+          email.current.value,
+          password.current.value
+        )
+          .then((userCredential) => {
+            const user = userCredential.user;
+           console.log("userSignedIn",user);
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            setErrorMessage(errorCode + "-" + errorMessage);
+          });
+      }
+    }
   };
   return (
     <div>
@@ -28,36 +71,42 @@ const Login = () => {
           alt="logo"
         />
       </div>
-      <form onSubmit={(e)=> e.preventDefault()} className="absolute p-12 bg-black w-4/12 my-36 mx-auto right-0 left-0 text-white bg-opacity-70">
-        <h1 className="font-bold text-3xl py-4">
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        className="absolute p-12 bg-black w-4/12 my-36 mx-auto right-0 left-0 text-white bg-opacity-70"
+      >
+        <h1 className="font-bold text-3xl p-4">
           {" "}
           {isSignInForm ? "Sign In" : "Sign Up"}
         </h1>
         {!isSignInForm && (
           <input
-          ref={name}
+            ref={name}
             type="text"
             placeholder=" Full Name"
             className="p-4 my-6 w-full bg-gray-700"
           ></input>
         )}
         <input
-        ref={email}
+          ref={email}
           type="email"
           placeholder="Email Address"
           className="p-4 my-6 w-full bg-gray-700"
         ></input>
         <input
-        ref={password}
+          ref={password}
           type="password"
           placeholder="Password"
           className="p-4 my-6 w-full  bg-gray-700"
         ></input>
 
-      <p className="font-bold text-lg p-2 my-2 text-red-500">{isErrorMessage}</p>
+        <p className="font-bold text-lg p-2 my-2 text-red-500">
+          {isErrorMessage}
+        </p>
         <button
           type="submit"
-          className="p-4 my-6 bg-red-700 w-full rounded-lg " onClick={handleBtnClick}
+          className="p-4 my-6 bg-red-700 w-full rounded-lg "
+          onClick={handleBtnClick}
         >
           {isSignInForm ? "Sign In" : "Sign Up"}
         </button>
